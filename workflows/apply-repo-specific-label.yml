@@ -1,0 +1,30 @@
+name: Apply Repository-Specific Issue Labels
+on:
+    issues:
+        types: [opened]
+
+jobs:
+    add-label:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Apply custom label based on the repository
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  REPO_NAME="${{ github.repository }}"
+
+                  # Define repository-specific labels
+                  case "$REPO_NAME" in
+                    "Anthos-Capital/Mosaic-Quench-FE")
+                      LABEL="Quench"
+                      ;;
+                    *)
+                      LABEL=""
+                      ;;
+                  esac
+
+                  # Apply the label to the newly created issue
+                  gh issue edit ${{ github.event.issue.number }} --add-label "$LABEL"
