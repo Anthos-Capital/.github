@@ -21,6 +21,9 @@ jobs:
                     "Anthos-Capital/Mosaic-Quench-FE")
                       LABEL="Quench"
                       ;;
+                    "Anthos-Capital/LinkedIn-Enrichment")
+                      LABEL="LinkedIn Enrichment"
+                      ;;
                     *)
                       LABEL=""
                       ;;
