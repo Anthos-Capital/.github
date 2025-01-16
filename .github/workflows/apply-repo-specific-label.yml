@@ -3,21 +3,25 @@ on:
     issues:
         types: [opened]
 
+# Add explicit permissions
+permissions:
+    issues: write
+    contents: read
+
 jobs:
     add-label:
         runs-on: ubuntu-latest
         steps:
-            - name: Authenticate GitHub CLI
-              run: |
-                  echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
-
             - name: Apply custom label based on the repository
               env:
-                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                   REPO_NAME="${{ github.repository }}"
-                  echo "Processing issue for repository: $REPO_NAME"
+                  ISSUE_NUMBER="${{ github.event.issue.number }}"
+
+                  echo "Debug information:"
+                  echo "Repository: $REPO_NAME"
+                  echo "Issue number: $ISSUE_NUMBER"
 
                   # Define repository-specific labels
                   case "$REPO_NAME" in
@@ -33,8 +37,15 @@ jobs:
                   esac
 
                   if [ -n "$LABEL" ]; then
-                    echo "Applying label: $LABEL"
-                    gh issue edit ${{ github.event.issue.number }} --add-label "$LABEL" --repo "$REPO_NAME"
+                    echo "Attempting to apply label: $LABEL"
+                    # Use GitHub REST API directly instead of gh CLI
+                    curl -X POST \
+                      -H "Authorization: token $GITHUB_TOKEN" \
+                      -H "Accept: application/vnd.github.v3+json" \
+                      "https://api.github.com/repos/$REPO_NAME/issues/$ISSUE_NUMBER/labels" \
+                      -d "{\"labels\":[\"$LABEL\"]}"
+                    
+                    echo "Label application attempt completed"
                   else
                     echo "No specific label defined for this repository"
                   fi
