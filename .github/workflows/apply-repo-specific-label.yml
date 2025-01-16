@@ -1,9 +1,14 @@
 name: Apply Repository-Specific Issue Labels
 on:
-    issues:
-        types: [opened]
+    workflow_call:
+        inputs:
+            issue_number:
+                required: true
+                type: number
+            repository:
+                required: true
+                type: string
 
-# Add explicit permissions
 permissions:
     issues: write
     contents: read
@@ -16,8 +21,8 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  REPO_NAME="${{ github.repository }}"
-                  ISSUE_NUMBER="${{ github.event.issue.number }}"
+                  REPO_NAME="${{ inputs.repository }}"
+                  ISSUE_NUMBER="${{ inputs.issue_number }}"
 
                   echo "Debug information:"
                   echo "Repository: $REPO_NAME"
