@@ -1,7 +1,7 @@
 ---
-name: Custom issue template
-about: Describe this issue template's purpose here.
-title: ''
+name: Generic Issue Template
+about: Generic issue template to be used across Anthos repositories.
+title: '[DEV] '
 labels: ''
 assignees: ''
 
