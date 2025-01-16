@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Generic Issue
-    url: https://github.com/your-org/your-repo/issues/new?template=generic_issue.md
+    url: https://github.com/Anthos-Capital/.github/issues/new?template=generic_issue.md
     about: Use this template as base issue template.
