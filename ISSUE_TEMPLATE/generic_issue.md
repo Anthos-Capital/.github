@@ -2,7 +2,7 @@
 name: Anthos Issue Template
 about: Generic issue template to be used across Anthos repositories
 title: "[DEV] "
-lables: ""
+labels: ""
 assignees: ""
 ---
 
