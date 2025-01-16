@@ -1,11 +1,3 @@
----
-name: Anthos Issue Template
-about: Generic issue template to be used across Anthos repositories
-title: "[DEV] "
-labels: ""
-assignees: ""
----
-
 ### 📝 Description
 
 <!-- Provide a clear and concise description of the issue, feature, or task.
