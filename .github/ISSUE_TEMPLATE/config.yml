@@ -1,5 +1,0 @@
-blank_issues_enabled: false
-contact_links:
-  - name: Generic Issue
-    url: https://github.com/Anthos-Capital/Affinity-Enrichment/issues/new?template=default.md
-    about: Use this template as base issue template.
