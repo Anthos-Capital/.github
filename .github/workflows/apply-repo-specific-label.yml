@@ -30,11 +30,62 @@ jobs:
 
                   # Define repository-specific labels
                   case "$REPO_NAME" in
-                    "Anthos-Capital/Mosaic-Quench-FE")
-                      LABEL="Quench"
+                    "Anthos-Capital/Affinity-Enrichment")
+                      LABEL="Affinity Enrichment"
+                      ;;
+                    "Anthos-Capital/Alloy-ReactJS")
+                      LABEL="Affinity Enrichment"
                       ;;
                     "Anthos-Capital/LinkedIn-Enrichment")
                       LABEL="LinkedIn Enrichment"
+                      ;;
+                    "Anthos-Capital/Alloy-ReactJS")
+                      LABEL="Alloy"
+                      ;;
+                    "Anthos-Capital/Alloy-WebServices")
+                      LABEL="Alloy"
+                      ;;
+                    "Anthos-Capital/Company-Name-resolver")
+                      LABEL="CNR"
+                      ;;
+                    "Anthos-Capital/Company-Name-Resolver-FE")
+                      LABEL="CNR"
+                      ;;
+                    "Anthos-Capital/company-categorization")
+                      LABEL="Company Categorization"
+                      ;;
+                    "Anthos-Capital/company-filter")
+                      LABEL="Company Filter"
+                      ;;
+                    "Anthos-Capital/company-snapshot")
+                      LABEL="Company Snapshot"
+                      ;;
+                    "Anthos-Capital/Facesheets")
+                      LABEL="Facesheets"
+                      ;;
+                    "Anthos-Capital/Forge-FE")
+                      LABEL="Forge"
+                      ;;
+                    "Anthos-Capital/Forge-BE")
+                      LABEL="Forge"
+                      ;;
+                    "Anthos-Capital/foundry")
+                      LABEL="Foundry"
+                      ;;
+                    "Anthos-Capital/Glean-Indexer")
+                      LABEL="Glean Indexer"
+                      ;;
+                    "Anthos-Capital/Kafka")
+                      LABEL="Kafka"
+                      ;;
+                    "Anthos-Capital/LinkedIn-Enrichment")
+                      LABEL="LinkedIn Enrichment"
+                      ;;
+                    "Anthos-Capital/Mosaic-Quench-BE")
+                      LABEL="Quench"
+                      ;;
+                    "Anthos-Capital/Mosaic-Quench-FE")
+                      LABEL="Quench"
                       ;;
                     *)
                       LABEL=""
