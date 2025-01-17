@@ -1,0 +1,28 @@
+name: Move Zenhub Issue to Next Pipeline
+
+on:
+    workflow_call:
+        inputs:
+            repo_id:
+                description: "GitHub repository ID"
+                required: true
+            zenhub_pipeline_id:
+                description: "Zenhub pipeline ID"
+                required: true
+        secrets:
+            ZENHUB_API_TOKEN:
+                required: true
+
+jobs:
+    move_issue:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Move issue in Zenhub
+              env:
+                  ZENHUB_API_TOKEN: ${{ secrets.ZENHUB_API_TOKEN }}
+              run: |
+                  curl -X POST \
+                    -H "Content-Type: application/json" \
+                    -H "X-Authentication-Token: $ZENHUB_API_TOKEN" \
+                    -d '{"pipeline_id": "${{ inputs.zenhub_pipeline_id }}"}' \
+                    https://api.zenhub.com/p1/repositories/${{ inputs.repo_id }}/issues/${{ github.event.issue.number }}/moves
