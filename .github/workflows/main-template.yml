@@ -1,0 +1,93 @@
+name: Main Template Workflow
+
+on:
+    workflow_call:
+        inputs:
+            issue_number:
+                description: "Issue number for label application and Zenhub moves"
+                required: false
+                type: number
+            repository:
+                description: "Repository name for label application"
+                required: false
+                type: string
+        secrets:
+            ZENHUB_API_TOKEN:
+                description: "Token for Zenhub operations"
+                required: false
+            GITHUB_TOKEN:
+                description: "GitHub token for operations"
+                required: false
+
+permissions:
+    issues: write
+    pull-requests: write
+    contents: read
+
+jobs:
+    apply_labels:
+        name: Apply Repository Labels
+        if: inputs.issue_number != 0 && inputs.repository != ''
+        uses: ./.github/workflows/apply-repo-specific-label.yml
+        with:
+            issue_number: ${{ inputs.issue_number }}
+            repository: ${{ inputs.repository }}
+
+    check_linked_issues:
+        name: Check Linked Issues
+        if: github.event_name == 'pull_request_target'
+        uses: ./.github/workflows/check-linked-issue.yml
+
+    auto_assign_pr:
+        name: Auto-Assign PR Author
+        if: github.event_name == 'pull_request'
+        uses: ./.github/workflows/assign-pr-author.yml
+
+    extract_issue:
+        name: Extract Issue Number
+        if: github.event_name == 'pull_request' || github.event_name == 'create'
+        uses: ./.github/workflows/extract-issue-number.yml
+        with:
+            branch_name: ${{ github.head_ref || github.ref_name }}
+
+    zenhub_moves:
+        name: Handle Zenhub Board Moves
+        needs: [extract_issue]
+        uses: ./.github/workflows/zenhub-move-in-progress.yml
+        secrets:
+            ZENHUB_API_TOKEN: ${{ secrets.ZENHUB_API_TOKEN }}
+
+    link_pr_issue:
+        name: Link PR to Issue
+        if: github.event_name == 'pull_request'
+        needs: [extract_issue]
+        uses: ./.github/workflows/link-pr-issue.yml
+
+    redirect_pr:
+        name: Redirect PR Target
+        if: github.event_name == 'pull_request_target'
+        uses: ./.github/workflows/redirect-pr-target.yml
+
+    zenhub_review:
+        name: Move to Review in Zenhub
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        needs: [extract_issue]
+        uses: ./.github/workflows/zenhub-move-review.yml
+        secrets:
+            ZENHUB_API_TOKEN: ${{ secrets.ZENHUB_API_TOKEN }}
+
+    zenhub_qa:
+        name: Move to QA in Zenhub
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        needs: [extract_issue]
+        uses: ./.github/workflows/zenhub-move-qa.yml
+        secrets:
+            ZENHUB_API_TOKEN: ${{ secrets.ZENHUB_API_TOKEN }}
+
+    zenhub_done:
+        name: Move to Done in Zenhub
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.head_ref == 'dev'
+        uses: ./.github/workflows/zenhub-move-done.yml
+        secrets:
+            ZENHUB_API_TOKEN: ${{ secrets.ZENHUB_API_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
