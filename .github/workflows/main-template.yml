@@ -3,10 +3,6 @@ name: Main Template Workflow
 on:
     workflow_call:
         inputs:
-            issue_number:
-                description: "Issue number for label application and Zenhub moves"
-                required: false
-                type: number
             repository:
                 description: "Repository name for label application"
                 required: false
@@ -25,12 +21,20 @@ permissions:
     contents: read
 
 jobs:
+    extract_issue:
+        name: Extract Issue Number
+        if: github.event_name == 'pull_request' || github.event_name == 'create'
+        uses: ./.github/workflows/extract-issue-number.yml
+        with:
+            branch_name: ${{ github.head_ref || github.ref_name }}
+
     apply_labels:
         name: Apply Repository Labels
-        if: inputs.issue_number != 0 && inputs.repository != ''
+        needs: [extract_issue]
+        if: inputs.repository != ''
         uses: ./.github/workflows/apply-repo-specific-label.yml
         with:
-            issue_number: ${{ inputs.issue_number }}
+            issue_number: ${{ needs.extract_issue.outputs.issue_number }}
             repository: ${{ inputs.repository }}
         secrets:
             WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
@@ -48,13 +52,6 @@ jobs:
         uses: ./.github/workflows/assign-pr-author.yml
         secrets:
             WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
-
-    extract_issue:
-        name: Extract Issue Number
-        if: github.event_name == 'pull_request' || github.event_name == 'create'
-        uses: ./.github/workflows/extract-issue-number.yml
-        with:
-            branch_name: ${{ github.head_ref || github.ref_name }}
 
     zenhub_moves:
         name: Handle Zenhub Board Moves
