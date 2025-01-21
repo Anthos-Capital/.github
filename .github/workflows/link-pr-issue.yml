@@ -3,7 +3,7 @@ name: Link PR to Issue
 on:
     workflow_call:
         secrets:
-            GITHUB_TOKEN:
+            WORKFLOW_TOKEN:
                 required: true
     pull_request:
         types: [opened, synchronize]

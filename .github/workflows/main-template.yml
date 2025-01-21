@@ -32,6 +32,8 @@ jobs:
         with:
             issue_number: ${{ inputs.issue_number }}
             repository: ${{ inputs.repository }}
+        secrets:
+            WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
     check_linked_issues:
         name: Check Linked Issues
@@ -44,6 +46,8 @@ jobs:
         name: Auto-Assign PR Author
         if: github.event_name == 'pull_request'
         uses: ./.github/workflows/assign-pr-author.yml
+        secrets:
+            WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
     extract_issue:
         name: Extract Issue Number
@@ -64,11 +68,15 @@ jobs:
         if: github.event_name == 'pull_request'
         needs: [extract_issue]
         uses: ./.github/workflows/link-pr-issue.yml
+        secrets:
+            WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
     redirect_pr:
         name: Redirect PR Target
         if: github.event_name == 'pull_request_target'
         uses: ./.github/workflows/redirect-pr-target.yml
+        secrets:
+            WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
     zenhub_review:
         name: Move to Review in Zenhub
