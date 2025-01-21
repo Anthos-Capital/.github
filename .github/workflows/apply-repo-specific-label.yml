@@ -9,9 +9,6 @@ on:
             repository:
                 required: true
                 type: string
-        secrets:
-            WORKFLOW_TOKEN:
-                required: true
 
 permissions:
     issues: write
