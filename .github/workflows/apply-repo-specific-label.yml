@@ -1,4 +1,5 @@
 name: Apply Repository-Specific Issue Labels
+
 on:
     workflow_call:
         inputs:
@@ -8,6 +9,9 @@ on:
             repository:
                 required: true
                 type: string
+        secrets:
+            GITHUB_TOKEN:
+                required: true
 
 permissions:
     issues: write
@@ -94,7 +98,6 @@ jobs:
 
                   if [ -n "$LABEL" ]; then
                     echo "Attempting to apply label: $LABEL"
-                    # Use GitHub REST API directly instead of gh CLI
                     curl -X POST \
                       -H "Authorization: token $GITHUB_TOKEN" \
                       -H "Accept: application/vnd.github.v3+json" \

@@ -1,6 +1,10 @@
 name: "[Zenhub] Move Issue to In Progress"
 
 on:
+    workflow_call:
+        secrets:
+            ZENHUB_API_TOKEN:
+                required: true
     create:
         branches:
             - "**"

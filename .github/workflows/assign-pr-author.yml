@@ -1,11 +1,15 @@
 name: Auto-Assign PR to Author
 
 on:
+    workflow_call:
+        secrets:
+            GITHUB_TOKEN:
+                required: true
     pull_request:
         types: [opened]
 
 jobs:
-    assing_author:
+    assign_author:
         name: Assign author to PR
         runs-on: ubuntu-latest
         steps:

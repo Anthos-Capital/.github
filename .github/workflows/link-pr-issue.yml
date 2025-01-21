@@ -1,6 +1,10 @@
 name: Link PR to Issue
 
 on:
+    workflow_call:
+        secrets:
+            GITHUB_TOKEN:
+                required: true
     pull_request:
         types: [opened, synchronize]
 
@@ -16,7 +20,7 @@ jobs:
         needs: extract_issue_number
         runs-on: ubuntu-latest
         permissions:
-            pull-requests: write # Ensure permission to update pull requests
+            pull-requests: write
         steps:
             - name: Add Comment to PR
               run: |

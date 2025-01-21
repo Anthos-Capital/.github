@@ -1,6 +1,10 @@
 name: Redirect PR Target Branch
 
 on:
+    workflow_call:
+        secrets:
+            GITHUB_TOKEN:
+                required: true
     pull_request_target:
         types: [opened]
 
