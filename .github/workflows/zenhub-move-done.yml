@@ -1,12 +1,6 @@
 name: "[Zenhub] Move Multiple Issues to Done"
 
 on:
-    workflow_call:
-        secrets:
-            ZENHUB_API_TOKEN:
-                required: true
-            WORKFLOW_TOKEN:
-                required: true
     pull_request:
         types: [closed]
         branches:
@@ -39,7 +33,7 @@ jobs:
 
                   echo "issues=$ISSUES_JSON" >> $GITHUB_OUTPUT
 
-            - name: Move Issues to Done
+            - name: Move Issues in Zenhub
               if: steps.get-issues.outputs.issues != '[]'
               run: |
                   TARGET_PIPELINE_ID="Z2lkOi8vcmFwdG9yL1BpcGVsaW5lLzM0MDQ5Njg"

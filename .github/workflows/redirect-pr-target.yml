@@ -1,10 +1,6 @@
 name: Redirect PR Target Branch
 
 on:
-    workflow_call:
-        secrets:
-            WORKFLOW_TOKEN:
-                required: true
     pull_request_target:
         types: [opened]
 

@@ -1,15 +1,11 @@
 name: Auto-Assign PR to Author
 
 on:
-    workflow_call:
-        secrets:
-            WORKFLOW_TOKEN:
-                required: true
     pull_request:
         types: [opened]
 
 jobs:
-    assign_author:
+    assing_author:
         name: Assign author to PR
         runs-on: ubuntu-latest
         steps:
