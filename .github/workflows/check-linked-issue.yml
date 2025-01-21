@@ -1,7 +1,7 @@
 name: Check PR Linked Issues
 
 on:
-    pull_request_target:
+    pull_requests:
         types: [opened, edited, reopened, synchronize, connected, disconnected]
 
 jobs:
@@ -13,7 +13,6 @@ jobs:
             issues: read
             pull-requests: write
             actions: read
-            pull-request-target: write
         steps:
             - uses: nearform-actions/github-action-check-linked-issues@v1
               id: check-linked-issues
