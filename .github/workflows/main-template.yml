@@ -37,6 +37,8 @@ jobs:
         name: Check Linked Issues
         if: github.event_name == 'pull_request_target'
         uses: ./.github/workflows/check-linked-issue.yml
+        secrets:
+            WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
     auto_assign_pr:
         name: Auto-Assign PR Author
