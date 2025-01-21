@@ -34,7 +34,6 @@ jobs:
         if: inputs.repository != ''
         uses: ./.github/workflows/apply-repo-specific-label.yml
         with:
-            issue_number: ${{ needs.extract_issue.outputs.issue_number }}
             repository: ${{ inputs.repository }}
         secrets:
             WORKFLOW_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}

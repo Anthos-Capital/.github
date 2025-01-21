@@ -4,7 +4,7 @@ on:
     workflow_call:
         inputs:
             issue_number:
-                required: true
+                required: false
                 type: number
             repository:
                 required: true
@@ -18,7 +18,14 @@ permissions:
     contents: read
 
 jobs:
+    extract-issue:
+        if: inputs.issue_number == null
+        uses: ./.github/workflows/extract-issue-number.yml
+        with:
+            branch_name: ${{ github.head_ref || github.ref_name }}
+
     add-label:
+        needs: extract-issue
         runs-on: ubuntu-latest
         steps:
             - name: Apply custom label based on the repository
@@ -26,11 +33,17 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                   REPO_NAME="${{ inputs.repository }}"
-                  ISSUE_NUMBER="${{ inputs.issue_number }}"
+                  ISSUE_NUMBER="${{ inputs.issue_number || needs.extract-issue.outputs.issue_number }}"
 
                   echo "Debug information:"
                   echo "Repository: $REPO_NAME"
                   echo "Issue number: $ISSUE_NUMBER"
+
+                  # Fail if no issue number is found
+                  if [ -z "$ISSUE_NUMBER" ] || [ "$ISSUE_NUMBER" = "null" ]; then
+                    echo "Error: No issue number found. Either provide an issue number as input or ensure the branch name contains one."
+                    exit 1
+                  fi
 
                   # Define repository-specific labels
                   case "$REPO_NAME" in
