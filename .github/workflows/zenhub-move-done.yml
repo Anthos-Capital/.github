@@ -28,8 +28,8 @@ jobs:
                   if [ -z "$ISSUES" ]; then
                     echo "issues=[]" >> "$GITHUB_OUTPUT"
                   else
-                    # Create a clean JSON array with no whitespace or trailing commas
-                    ISSUES_JSON=$(echo "$ISSUES" | tr -d ' ' | jq -R -c 'split("\n") | map(select(length > 0)) | tojson')
+                    # Create a properly formatted JSON array using jq
+                    ISSUES_JSON=$(echo "$ISSUES" | jq -R -s 'split("\n") | map(select(length > 0))')
                     echo "issues=$ISSUES_JSON" >> "$GITHUB_OUTPUT"
                   fi
 
