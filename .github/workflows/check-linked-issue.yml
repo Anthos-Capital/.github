@@ -7,7 +7,7 @@ on:
 
 jobs:
     check_pull_requests:
-        if: (github.head_ref != 'dev') || (github.base_ref != 'main' && github.base_ref != 'staging')
+        if: github.base_ref == 'dev'
         runs-on: ubuntu-latest
         name: Check linked issues
         permissions:
