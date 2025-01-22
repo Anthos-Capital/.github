@@ -22,16 +22,15 @@ jobs:
 
                   PR_BODY=$(echo "$PR_DATA" | jq -r '.body // ""')
 
-                  # Extract issue numbers and create JSON array
-                  ISSUES=$(echo "$PR_BODY" | grep -oP '(?:fixes|closes|resolves)\s+#\K[0-9]+' | sort -u || echo "")
+                  # Extract issue numbers and format directly as JSON array
+                  ISSUES=$(echo "$PR_BODY" | grep -oP '(?:fixes|closes|resolves)\s+#\K[0-9]+' | sort -u)
 
-                  # Create JSON array with compact formatting
                   if [ -z "$ISSUES" ]; then
                     echo "issues=[]" >> "$GITHUB_OUTPUT"
                   else
-                    # Create compact JSON array without spaces or newlines
-                    ARRAY=$(printf '"%s",' $ISSUES | sed 's/,$//')
-                    echo "issues=[${ARRAY}]" >> "$GITHUB_OUTPUT"
+                    # Convert to single-line array without any spaces
+                    JSON_ARRAY=$(echo "$ISSUES" | tr '\n' ',' | sed 's/,$//' | sed 's/^/[/' | sed 's/$/]/')
+                    echo "issues=$JSON_ARRAY" >> "$GITHUB_OUTPUT"
                   fi
 
             - name: Move Issues in Zenhub
