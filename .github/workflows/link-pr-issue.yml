@@ -7,7 +7,7 @@ on:
 
 jobs:
     extract_issue_number:
-        if: github.head_ref != 'dev' || github.base_ref != 'main'
+        if: github.base_ref == 'dev'
         uses: ./.github/workflows/extract-issue-number.yml
         with:
             branch_name: ${{ github.head_ref }}
