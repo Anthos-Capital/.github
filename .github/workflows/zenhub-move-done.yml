@@ -9,7 +9,7 @@ on:
 
 jobs:
     process_issues:
-        if: github.event.pull_request.merged == true && (github.head_ref == 'dev' || github.head_ref == 'staging')
+        if: github.event.pull_request.merged == true && github.base_ref == 'main'
         runs-on: ubuntu-latest
         steps:
             - name: Get Linked Issues
