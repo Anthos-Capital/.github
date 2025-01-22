@@ -20,7 +20,7 @@ permissions:
 
 jobs:
     extract-issue:
-        if: inputs.issue_number == null
+        if: inputs.issue_number == null && (github.base_ref != 'dev' && github.base_ref != 'staging' && github.base_ref != 'main')
         uses: ./.github/workflows/extract-issue-number.yml
         with:
             branch_name: ${{ github.head_ref || github.ref_name }}
