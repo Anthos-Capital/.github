@@ -2,7 +2,7 @@ name: Check PR Linked Issues
 
 on:
     pull_request:
-        types: [opened, edited, reopened, synchronize, connected, disconnected]
+        types: [opened, edited, reopened, synchronize]
     workflow_call: {}
 
 jobs:
