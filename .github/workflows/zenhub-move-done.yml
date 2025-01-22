@@ -28,11 +28,11 @@ jobs:
                     echo "No issues found in PR body"
                     ISSUES_JSON="[]"
                   else
-                    # Convert to JSON array properly
-                    ISSUES_JSON="[$(echo "$ISSUES" | paste -sd ',' - | sed 's/\([0-9]\+\)/"\1"/g')]"
+                    # Convert to JSON array using jq to ensure proper formatting
+                    ISSUES_JSON=$(echo "$ISSUES" | jq -R -s 'split("\n") | map(select(length > 0))')
                   fi
 
-                  echo "issues=$ISSUES_JSON" >> $GITHUB_OUTPUT
+                  echo "issues=${ISSUES_JSON}" >> $GITHUB_OUTPUT
 
             - name: Move Issues in Zenhub
               if: steps.get-issues.outputs.issues != '[]'
