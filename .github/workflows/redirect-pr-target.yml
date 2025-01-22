@@ -30,3 +30,8 @@ jobs:
                     -H "Accept: application/vnd.github.v3+json" \
                     "https://api.github.com/repos/$REPO/issues/$PR_NUMBER/comments" \
                     -d '{"body":"⚠️ This PR was automatically redirected to target the `dev` branch instead of `main`. All PRs should go through `dev` first."}'
+
+    trigger_zenhub_workflow:
+        needs: redirect_pr
+        uses: ./.github/workflows/zenhub-move-review.yml
+        secrets: inherit
