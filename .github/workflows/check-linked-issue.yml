@@ -7,7 +7,7 @@ on:
 
 jobs:
     check_pull_requests:
-        if: github.base_ref == 'dev'
+        if: github.base_ref == 'dev' || github.base_ref == 'main'
         runs-on: ubuntu-latest
         name: Check linked issues
         permissions:
