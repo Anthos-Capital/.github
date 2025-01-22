@@ -5,7 +5,8 @@
   This ensures traceability and automatic closure of issues when the PR is merged.
 -->
 
--   fixes #<issue-number>
+fixes #<issue-number>
+resolves #<issue-number>
 
 <!-- IMPORTANT: ensure this PR is linked to Zenhub by clicking the "Connect Issue" CTA below. -->
 
