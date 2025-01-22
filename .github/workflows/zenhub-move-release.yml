@@ -3,6 +3,7 @@ name: "[Zenhub] Move Released Issues"
 on:
     release:
         types: [published, edited]
+    workflow_call: {}
 
 jobs:
     process_release_issues:

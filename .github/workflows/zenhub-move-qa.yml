@@ -3,6 +3,7 @@ name: "[Zenhub] Move Issue to QA"
 on:
     pull_request:
         types: [closed]
+    workflow_call: {}
 
 jobs:
     extract_issue_number:

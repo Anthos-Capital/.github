@@ -3,9 +3,10 @@ name: Auto-Assign PR to Author
 on:
     pull_request:
         types: [opened]
+    workflow_call: {}
 
 jobs:
-    assing_author:
+    assign_author:
         name: Assign author to PR
         runs-on: ubuntu-latest
         steps:

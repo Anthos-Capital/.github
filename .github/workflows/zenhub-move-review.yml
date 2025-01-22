@@ -3,6 +3,7 @@ name: "[Zenhub] Move Issue to In Review"
 on:
     pull_request:
         types: [opened]
+    workflow_call: {}
 
 jobs:
     get_issue_number:
