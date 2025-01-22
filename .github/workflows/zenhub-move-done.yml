@@ -21,9 +21,9 @@ jobs:
 
                   PR_BODY=$(echo "$PR_DATA" | jq -r '.body // ""')
 
-                  # Extract issue numbers and format directly as JSON array
-                  ISSUES_JSON=$(echo "$PR_BODY" | grep -oP '(?:fixes|closes|resolves)\s+#\K[0-9]+' | sort -u | \
-                    awk 'BEGIN{printf "["} {if(NR>1)printf ","; printf "\"%s\"", $0} END{printf "]"}' || echo "[]")
+                  # Extract issue numbers and create JSON array in one step
+                  ISSUES_JSON=$(echo "$PR_BODY" | grep -oP '(?:fixes|closes|resolves)\s+#\K[0-9]+' | \
+                    jq -R -n '[inputs]' || echo "[]")
 
                   echo "issues=${ISSUES_JSON}" >> $GITHUB_OUTPUT
 
