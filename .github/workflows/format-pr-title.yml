@@ -36,13 +36,15 @@ jobs:
                     esac
                     
                     # Check if PR title already has the correct format
-                    if [[ ! "$PR_TITLE" =~ ^\[(feat|fix|release|support)\]:\ #[0-9]+.*$ ]]; then
+                    if [[ ! "$PR_TITLE" =~ ^(feat|fix|release|support):\ #[0-9]+.*$ ]]; then
                       # Remove any existing [type]: prefix if present
                       CLEAN_TITLE=$(echo "$PR_TITLE" | sed -E 's/^\[(feat|fix|release|support)\]: ?//')
+                      # Remove any existing type: prefix if present
+                      CLEAN_TITLE=$(echo "$CLEAN_TITLE" | sed -E 's/^(feat|fix|release|support): ?//')
                       # Remove any existing #NUMBER if present
                       CLEAN_TITLE=$(echo "$CLEAN_TITLE" | sed -E 's/^#[0-9]+ ?//')
                       # Format new title
-                      NEW_TITLE="[$TYPE]: #$ISSUE_NUMBER $CLEAN_TITLE"
+                      NEW_TITLE="$TYPE: #$ISSUE_NUMBER $CLEAN_TITLE"
                       
                       # Update PR title using GitHub API
                       curl -X PATCH \
