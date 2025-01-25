@@ -6,7 +6,11 @@ on:
     workflow_call: {}
 
 jobs:
+    format_pr_title:
+        uses: ./.github/workflows/format-pr-title.yml
+
     check_pull_requests:
+        needs: format_pr_title
         if: github.base_ref == 'dev' || github.base_ref == 'main'
         runs-on: ubuntu-latest
         name: Check linked issues
