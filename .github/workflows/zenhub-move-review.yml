@@ -7,13 +7,13 @@ on:
 
 jobs:
     get_issue_number:
-        if: github.base_ref == 'dev'
+        if: github.base_ref == 'dev' || github.base_ref == 'develop'
         uses: ./.github/workflows/extract-issue-number.yml
         with:
             branch_name: ${{ github.head_ref }}
 
     move_to_review:
-        if: github.head_ref != 'dev' || github.base_ref != 'main'
+        if: (github.head_ref != 'dev' && github.head_ref != 'develop') || github.base_ref != 'main'
         needs: get_issue_number
         runs-on: ubuntu-latest
         steps:

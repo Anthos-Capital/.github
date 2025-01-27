@@ -12,7 +12,7 @@ jobs:
             pull-requests: write
         steps:
             - name: Check and Update Base Branch
-              if: github.base_ref == 'main' && (github.head_ref != 'dev' && github.head_ref != 'staging')
+              if: github.base_ref == 'main' && (github.head_ref != 'dev' && github.head_ref != 'develop' && github.head_ref != 'staging')
               run: |
                   PR_NUMBER=${{ github.event.pull_request.number }}
                   REPO=${{ github.repository }}
