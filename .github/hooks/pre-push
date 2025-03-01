@@ -1,0 +1,28 @@
+#!/bin/bash
+
+BRANCH_NAME=$(git branch --show-current)
+
+# Skip check for protected branches
+PROTECTED_BRANCHES="main|dev|develop|staging"
+if [[ "$BRANCH_NAME" =~ ^($PROTECTED_BRANCHES)$ ]]; then
+    echo "On $BRANCH_NAME branch - skipping issue number check"
+    exit 0
+fi
+
+# Skip check for release branches
+if [[ "$BRANCH_NAME" =~ ^release/.* ]]; then
+    echo "On release branch - skipping issue number check"
+    exit 0
+fi
+
+# Regex to extract issue number from branch name
+if [[ "$BRANCH_NAME" =~ ^[^/]+/#([0-9]+)-.*$ ]]; then
+    ISSUE_NUMBER="${BASH_REMATCH[1]}"
+    echo "Branch is linked to issue: #${ISSUE_NUMBER}"
+    echo "Ensure your PR includes: Resolves #${ISSUE_NUMBER}"
+else
+    echo "Branch name does not include an issue number. Expected format: [type]/#[issue-number]-[description]"
+    echo "Example: feature/#123-add-button"
+    echo "Note: Release branches (release/*) are exempt from this requirement"
+    exit 1
+fi

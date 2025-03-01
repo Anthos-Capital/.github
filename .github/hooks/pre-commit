@@ -1,0 +1,83 @@
+#!/bin/bash
+
+LOCAL_BRANCH_NAME="$(git rev-parse --abbrev-ref HEAD)"
+
+# Constants
+BRANCH_PREFIX_SEPARATOR="/"
+COMMON_LIST_SEPARATOR="|"
+ALLOWED_PREFIXES="feature|bugfix|hotfix|release|support"
+
+# Skip validation for protected branches
+PROTECTED_BRANCHES="develop|main|staging"
+if [[ "$LOCAL_BRANCH_NAME" =~ ^($PROTECTED_BRANCHES)$ ]]; then
+    exit 0
+fi
+
+# Validate branch prefix
+if [[ ! "$LOCAL_BRANCH_NAME" =~ ^(release$BRANCH_PREFIX_SEPARATOR.*|($ALLOWED_PREFIXES)$BRANCH_PREFIX_SEPARATOR#[0-9]+-.*$) ]]; then
+    echo -e "\033[31m ERROR\033[0m Invalid branch name format."
+    echo -e "Branch names must follow these patterns:"
+    echo -e "- For release branches: release/[description]"
+    echo -e "- For other branches: (${ALLOWED_PREFIXES})/#[issue_number]-[description]"
+    echo -e "Examples:"
+    echo -e "- release/v1.0.0"
+    echo -e "- feature/#123-add-new-button"
+    echo -e "Use: git branch -m \$(git branch --show-current) new-branch-name"
+    exit 1
+fi
+
+echo '🚧👷‍♂️ Styling, testing and building your project before committing'
+
+# Check if yarn.lock exists to determine if we're in a JavaScript/TypeScript project
+if [ -f "yarn.lock" ]; then
+    # Check tsconfig standard if it exists
+    if [ -f "tsconfig.json" ]; then
+        yarn check-types || (
+            echo '⚠️⚠️ Failed Type check. ⚠️⚠️'
+            false;
+        )
+    fi
+
+    # Format code if prettier is available
+    if [ -f ".prettierrc" ] || [ -f ".prettierrc.js" ] || [ -f ".prettierrc.json" ]; then
+        yarn format || (
+            echo '⚠️⚠️ Failed Prettier format. ⚠️⚠️'
+            false;
+        )
+
+        yarn check-format || (
+            echo '🖌️⚠️🖌️ Prettier Format Failed. Run yarn format, add changes and try commit again. 🖌️⚠️🖌️'
+            false;
+        )
+    fi
+
+    # Check ESLint if .eslintrc exists
+    if [ -f ".eslintrc" ] || [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ]; then
+        yarn lint || (
+            echo '🔍⚠️🔍 ESLint Check Failed. Run yarn lint, add changes and try commit again. 🔍⚠️🔍'
+            false;
+        )
+    fi
+
+    # Run lint-staged if configured
+    if [ -f ".lintstagedrc" ] || [ -f ".lintstagedrc.js" ] || [ -f ".lintstagedrc.json" ]; then
+        npx lint-staged || (
+            echo '🚨🚨🚨 Lint-staged failed. Fix the errors and try commit again. 🚨🚨🚨'
+            false;
+        )
+    fi
+
+    # Check if build script exists and run it
+    if grep -q '"build":' package.json; then
+        echo '⌛⌛⌛ ... Alright... Code looks good to me... Trying to build now. ⌛⌛⌛'
+        yarn build || (
+            echo '🚨🚨🚨 Build Failed. Fix the errors and try commit again. 🚨🚨🚨'
+            false;
+        )
+    else
+        echo '⚠️⚠️ Build script not found in package.json. Skipping build step. ⚠️⚠️'
+    fi
+fi
+
+# If everything passes, allow the commit
+echo '✅✅✅ Congrats! I am committing this right now. ✅✅✅'
