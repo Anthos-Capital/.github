@@ -48,36 +48,36 @@ jobs:
 
                   echo "issues=$ISSUES_JSON" >> $GITHUB_OUTPUT
 
-            - name: Move Zenhub Pipeline
-              if: steps.get-issues.outputs.issues != '[]'
-              run: |
-                  TARGET_PIPELINE_ID="Z2lkOi8vcmFwdG9yL1BpcGVsaW5lLzM0MDQ5Njg"
-                  ISSUES=$(echo '${{ steps.get-issues.outputs.issues }}' | jq -r '.[]')
-
-                  for ISSUE in $ISSUES; do
-                    echo "Processing issue #${ISSUE}"
-                    ZENHUB_API="https://api.zenhub.com/p1/repositories/${{ github.event.repository.id }}/issues/${ISSUE}/moves"
-
-                    RESPONSE=$(curl -X POST \
-                      -H "X-Authentication-Token: ${{ secrets.ZENHUB_API_TOKEN }}" \
-                      -H "Content-Type: application/json" \
-                      -w "\n%{http_code}" \
-                      -d '{
-                        "pipeline_id": "'"$TARGET_PIPELINE_ID"'",
-                        "position": "top"
-                      }' \
-                      "$ZENHUB_API")
-
-                    HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
-                    RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
-
-                    echo "Moving issue #${ISSUE}"
-                    echo "HTTP Status: $HTTP_STATUS"
-                    echo "Response: $RESPONSE_BODY"
-
-                    if [[ $HTTP_STATUS -lt 200 || $HTTP_STATUS -gt 299 ]]; then
-                      echo "Failed to move issue #${ISSUE} in Zenhub. Status code: $HTTP_STATUS"
-                      echo "Error response: $RESPONSE_BODY"
-                      exit 1
-                    fi
-                  done
+            # - name: Move Zenhub Pipeline
+            # if: steps.get-issues.outputs.issues != '[]'
+            # run: |
+                # TARGET_PIPELINE_ID="Z2lkOi8vcmFwdG9yL1BpcGVsaW5lLzM0MDQ5Njg"
+                    # ISSUES=$(echo '${{ steps.get-issues.outputs.issues }}' | jq -r '.[]')
+                    #
+                    # for ISSUE in $ISSUES; do
+                    #   echo "Processing issue #${ISSUE}"
+                    #   ZENHUB_API="https://api.zenhub.com/p1/repositories/${{ github.event.repository.id }}/issues/${ISSUE}/moves"
+                    #
+                    #   RESPONSE=$(curl -X POST \
+                    #     -H "X-Authentication-Token: ${{ secrets.ZENHUB_API_TOKEN }}" \
+                    #     -H "Content-Type: application/json" \
+                    #     -w "\n%{http_code}" \
+                    #     -d '{
+                    #       "pipeline_id": "'"$TARGET_PIPELINE_ID"'",
+                    #       "position": "top"
+                    #     }' \
+                    #     "$ZENHUB_API")
+                    #
+                    #   HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
+                    #   RESPONSE_BODY=$(echo "$RESPONSE" | sed '$d')
+                    #
+                    #   echo "Moving issue #${ISSUE}"
+                    #   echo "HTTP Status: $HTTP_STATUS"
+                    #   echo "Response: $RESPONSE_BODY"
+                    #
+                    #   if [[ $HTTP_STATUS -lt 200 || $HTTP_STATUS -gt 299 ]]; then
+                    #     echo "Failed to move issue #${ISSUE} in Zenhub. Status code: $HTTP_STATUS"
+                    #     echo "Error response: $RESPONSE_BODY"
+                    #     exit 1
+                    #   fi
+                    # done
